@@ -1,6 +1,6 @@
 import ApplicationLogo from "@/Components/ApplicationLogo";
 import NavLinkResponsive from "@/Components/NavLinkResponsive";
-import { AlertCircle, AlertCircleIcon, BookAIcon, Building2, CreditCardIcon, CurrencyIcon, DotSquare, FileStackIcon, History, HomeIcon, HospitalIcon, KanbanIcon, KeyIcon, KeySquare, LayoutDashboardIcon, LockKeyhole, LogOutIcon, RouteIcon, Settings2Icon, SquareMenu, TicketSlashIcon, User, User2 } from "lucide-react";
+import { AlertCircle, AlertCircleIcon, BookAIcon, Building2, CreditCardIcon, CurrencyIcon, DotSquare, FileStackIcon, History, HomeIcon, HospitalIcon, KanbanIcon, KeyIcon, KeySquare, LayoutDashboardIcon, LockKeyhole, LogOutIcon, RouteIcon, RouterIcon, Settings2Icon, SquareMenu, TicketSlashIcon, User, User2 } from "lucide-react";
 
 export default function SidebarResponsive({ url, auth }) {
     return (
@@ -17,6 +17,7 @@ export default function SidebarResponsive({ url, auth }) {
                 <NavLinkResponsive url={route('admin.permissions.index')} active={url.startsWith('/admin/permissions')} title="Permission" icon={KeyIcon} />
                 <NavLinkResponsive url={route('admin.assign-permissions.index')} active={url.startsWith('/admin/assign-permissions')} title="Assign Permission" icon={KeyIcon} />
                 <NavLinkResponsive url={route('admin.assign-users.index')} active={url.startsWith('/admin/assign-users')} title="Assign Role" icon={LockKeyhole} />
+                <NavLinkResponsive url={route('admin.route-accesses.index')} active={url.startsWith('/admin/route-accesses')} title="Route Access" icon={RouterIcon} />
             </nav>
         </nav>
     )

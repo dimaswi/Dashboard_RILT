@@ -1,5 +1,5 @@
 import NavLink from "@/Components/NavLink";
-import { AlertCircle, AlertCircleIcon, BookAIcon, Building2, CreditCardIcon, CurrencyIcon, DotSquare, FileStackIcon, History, HomeIcon, Hospital, KanbanIcon, KeyIcon, KeySquare, LockKeyhole, LogOutIcon, RouteIcon, Settings2Icon, SquareMenu, TicketSlashIcon, User, User2 } from "lucide-react";
+import { AlertCircle, AlertCircleIcon, BookAIcon, Building2, CreditCardIcon, CurrencyIcon, DotSquare, FileStackIcon, History, HomeIcon, Hospital, KanbanIcon, KeyIcon, KeySquare, LockKeyhole, LogOutIcon, RouteIcon, RouterIcon, Settings2Icon, SquareMenu, TicketSlashIcon, User, User2 } from "lucide-react";
 
 
 export default function Sidebar({url, auth}) {
@@ -15,6 +15,7 @@ export default function Sidebar({url, auth}) {
             <NavLink url={route('admin.permissions.index')} active={url.startsWith('/admin/permissions')} title="Permission" icon={KeyIcon} />
             <NavLink url={route('admin.assign-permissions.index')} active={url.startsWith('/admin/assign-permissions')} title="Assign Permission" icon={KeyIcon} />
             <NavLink url={route('admin.assign-users.index')} active={url.startsWith('/admin/assign-users')} title="Assign Role" icon={LockKeyhole} />
+            <NavLink url={route('admin.route-accesses.index')} active={url.startsWith('/admin/route-accesses')} title="Access Route" icon={RouterIcon} />
         </nav>
     )
 }
