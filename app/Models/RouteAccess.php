@@ -10,6 +10,8 @@ use Spatie\Permission\Models\Role;
 
 class RouteAccess extends Model
 {
+    protected $connection = 'pgsql';
+
     protected $fillable = [
         'route_name',
         'role_id',

@@ -15,7 +15,7 @@ export default function Sidebar({url, auth}) {
             <NavLink url={route('admin.permissions.index')} active={url.startsWith('/admin/permissions')} title="Permission" icon={KeyIcon} />
             <NavLink url={route('admin.assign-permissions.index')} active={url.startsWith('/admin/assign-permissions')} title="Assign Permission" icon={KeyIcon} />
             <NavLink url={route('admin.assign-users.index')} active={url.startsWith('/admin/assign-users')} title="Assign Role" icon={LockKeyhole} />
-            <NavLink url={route('admin.route-accesses.index')} active={url.startsWith('/admin/route-accesses')} title="Access Route" icon={RouterIcon} />
+            <NavLink url={route('admin.route-accesses.index', 'ruangan=All')} active={url.startsWith('/admin/route-accesses')} title="Access Route" icon={RouterIcon} />
         </nav>
     )
 }

@@ -23,7 +23,7 @@ class RouteAccessResource extends JsonResource
                 'name' => $this->role?->name,
             ]),
             'permission' => $this->whenLoaded('permission', [
-                'id' => $this->permission->id,
+                'id' => $this->permission?->id,
                 'name' => $this->permission?->name,
             ]),
         ];

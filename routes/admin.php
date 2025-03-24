@@ -9,7 +9,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Dashboard\RawatJalanController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth'])->prefix('admin')->group(function() {
+Route::middleware(['auth', 'dynamic.role_permission'])->prefix('admin')->group(function() {
 
     Route::controller(UserController::class)->group(function() {
         Route::get('users', 'index')->name('admin.users.index');

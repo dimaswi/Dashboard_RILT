@@ -43,7 +43,7 @@ class RolesController extends Controller
                 'subtitle' => 'Menampilkan semua data role',
             ],
             'state' => [
-                'page' => request()->page ?? '',
+                'page' => request()->page ?? 1,
                 'search' => request()->search ?? '',
                 'load' => request()->load ?? '',
                 'field' => request()->field ?? '',
