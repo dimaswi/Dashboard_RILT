@@ -38,7 +38,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
 RUN apt-get install -y nodejs
 
 # Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+# RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install extensions
 RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl ftp intl
