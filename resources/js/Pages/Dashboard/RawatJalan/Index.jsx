@@ -5,7 +5,7 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/Components/
 import { Input } from "@/Components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/Components/ui/select";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
-import UseFilter from "@/Hooks/UseFilter";
+import UseFilter from "@/Hooks/UseFilter.js";
 import AppLayout from "@/Layouts/AppLayout";
 import { Ban, BookDashedIcon, Clock, HospitalIcon, LayoutDashboardIcon, LoaderPinwheelIcon, Users, Users2Icon } from "lucide-react";
 import { useMemo, useState } from "react";
