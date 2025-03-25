@@ -13,8 +13,8 @@ class RawatJalanController extends Controller
 {
     public function index(): Response
     {
-        // $from = Carbon::createFromFormat('Y-m-d H:i:s', request()->from);
-        // $to = Carbon::createFromFormat('Y-m-d H:i:s', request()->from == null ? Carbon::now() : request()->to);
+        $from = request()->from == null ? Carbon::now('Asia/Jakarta') : Carbon::parse(request()->from)->toDatetimeString();
+        $to = request()->to == null ? Carbon::now('Asia/Jakarta') : Carbon::parse(request()->to)->toDatetimeString();
 
         // dd($from, $to);
         if (request()->ruangan == 'All') {
