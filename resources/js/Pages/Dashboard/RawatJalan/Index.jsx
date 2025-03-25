@@ -196,7 +196,7 @@ export default function Index(props) {
                         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
                             <CardTitle>Data Rujukan</CardTitle>
                             <CardDescription>
-                                Menampilkan Data 30 Hari Rujukan Pasien
+                                Menampilkan Data Per Hari Rujukan Pasien (Max 30 Hari)
                             </CardDescription>
                         </div>
                         <div className="flex">
