@@ -192,14 +192,14 @@ export default function Index(props) {
 
             <div className="grid gap-4 md:grid-cols-1 md:gap-8">
                 <Card>
-                    <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
+                    <CardHeader className="flex items-stretch space-y-0 border-b p-0 sm:flex-row">
                         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
                             <CardTitle>Data Rujukan</CardTitle>
                             <CardDescription>
                                 Menampilkan Data Per Hari Rujukan Pasien (Max 30 Hari)
                             </CardDescription>
                         </div>
-                        <div className="flex">
+                        <div className="lg:flex">
                             {["rumah_sakit", "puskesmas", "klinik", "dokter", "apoteker", "instansi", "perusahaan"].map((key) => {
                                 const chart = props.rujukanChartConfig
                                 return (
