@@ -81,29 +81,29 @@ export default function Index(props) {
                     icon={BookDashedIcon}
                 />
 
-                <div className="flex flex-row gap-4">
-                <select
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[400px] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                value={params.ruangan} onChange={handleFilterRuangan}>
-                    <option value="All">Semua Ruangan</option>
-                    <option value={111010401}>Poli Spesialis Penyakit Dalam</option>
-                    <option value={111010501}>Poli Spesialis Anak</option>
-                    <option value={111010601}>Poli Spesialis Bedah</option>
-                    <option value={111010701}>Poli Spesialis Kandungan</option>
-                    <option value={113010101}>Poli Umum</option>
-                </select>
-                <Input
-                    value={params.from}
-                    onChange={handleFilterTanggalAwal}
-                    type="date"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[200px] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                />
-                <Input
-                    value={params.to}
-                    onChange={handleFilterTanggalAkhir}
-                    type="date"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[200px] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                />
+                <div className="flex flex-col gap-4 lg:flex-row">
+                    <select
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[300px] lg:w-[400px] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        value={params.ruangan} onChange={handleFilterRuangan}>
+                        <option value="All">Semua Ruangan</option>
+                        <option value={111010401}>Poli Spesialis Penyakit Dalam</option>
+                        <option value={111010501}>Poli Spesialis Anak</option>
+                        <option value={111010601}>Poli Spesialis Bedah</option>
+                        <option value={111010701}>Poli Spesialis Kandungan</option>
+                        <option value={113010101}>Poli Umum</option>
+                    </select>
+                    <Input
+                        value={params.from}
+                        onChange={handleFilterTanggalAwal}
+                        type="date"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[300px] lg:w-[200px] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    />
+                    <Input
+                        value={params.to}
+                        onChange={handleFilterTanggalAkhir}
+                        type="date"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[300px] lg:w-[200px] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    />
                 </div>
             </div>
 
