@@ -13,6 +13,10 @@ class RawatJalanController extends Controller
 {
     public function index(): Response
     {
+        // $from = Carbon::createFromFormat('Y-m-d H:i:s', request()->from);
+        // $to = Carbon::createFromFormat('Y-m-d H:i:s', request()->from == null ? Carbon::now() : request()->to);
+
+        // dd($from, $to);
         if (request()->ruangan == 'All') {
             $harian = Kunjungan::query()
                 ->whereDate('MASUK', Carbon::today())
@@ -42,6 +46,7 @@ class RawatJalanController extends Controller
                 )
                 ->orderBy('pendaftaran.kunjungan.MASUK', 'desc')
                 ->groupBy(DB::raw("DATE_FORMAT(pendaftaran.kunjungan.MASUK, '%m-%Y')"))
+                ->whereBetween('MASUK', [$from, $to])
                 ->limit(10)
                 ->get();
             $umur = Kunjungan::query()
@@ -58,6 +63,8 @@ class RawatJalanController extends Controller
                 )
                 ->orderBy('pendaftaran.kunjungan.MASUK', 'desc')
                 ->groupBy(DB::raw("DATE_FORMAT(pendaftaran.kunjungan.MASUK, '%m-%Y')"))
+                ->whereBetween('pendaftaran.kunjungan.MASUK', [$from, $to])
+                ->orderBy('tanggal', 'desc')
                 ->limit(10)
                 ->get();
             $new_weekly = Kunjungan::query()
@@ -80,10 +87,46 @@ class RawatJalanController extends Controller
                 ->whereIn('RUANGAN', ['111010401', '111010501', '111010601', '111010701', '113010101'])
                 ->where('pendaftaran.kunjungan.BARU', 0)
                 ->get();
+            $rujukanData = Kunjungan::query()
+                ->leftJoin('pendaftaran.pendaftaran', 'pendaftaran.pendaftaran.NOMOR', '=', 'pendaftaran.kunjungan.NOPEN')
+                ->leftJoin('master.ppk', 'pendaftaran.pendaftaran.RUJUKAN', '=', 'master.ppk.ID')
+                ->leftJoin('master.referensi', function ($query) {
+                    $query->on('master.ppk.JENIS', '=', 'master.referensi.ID')->where('master.referensi.JENIS', 11);
+                })
+                ->whereIn('RUANGAN', ['111010401', '111010501', '111010601', '111010701', '113010101'])
+                ->select(
+                    'pendaftaran.kunjungan.MASUK as tanggal',
+                    DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 156  THEN 1 ELSE NULL END) as rumah_sakit"),
+                    DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 157  THEN 1 ELSE NULL END) as puskesmas"),
+                    DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 158  THEN 1 ELSE NULL END) as klinik"),
+                    DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 159  THEN 1 ELSE NULL END) as dokter"),
+                    DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 160  THEN 1 ELSE NULL END) as apoteker"),
+                    DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 161  THEN 1 ELSE NULL END) as instansi"),
+                    DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 162  THEN 1 ELSE NULL END) as perusahaan"),
+                )
+                ->groupBy(DB::raw("DATE_FORMAT(pendaftaran.kunjungan.MASUK, '%d-%m-%Y')"))
+                ->whereBetween('pendaftaran.kunjungan.MASUK', [$from, $to])
+                ->orderBy('pendaftaran.kunjungan.MASUK', 'desc')
+                ->limit(30)
+                ->get();
+            $diagnosa =  Kunjungan::query()
+                ->leftJoin('medicalrecord.diagnosa', 'pendaftaran.kunjungan.NOPEN', '=', 'medicalrecord.diagnosa.NOPEN')
+                ->select(
+                    DB::raw("COUNT(*) as total"),
+                    'medicalrecord.diagnosa.KODE as kode_diagnosa',
+                    'medicalrecord.diagnosa.DIAGNOSA as nama_diagnosa'
+                )
+                ->limit(10)
+                ->orderBy('total', 'desc')
+                ->whereIn('RUANGAN', ['111010401', '111010501', '111010601', '111010701', '113010101'])
+                ->whereBetween('pendaftaran.kunjungan.MASUK', [$from, $to])
+                ->groupBy('medicalrecord.diagnosa.KODE')
+                ->get();
         } else {
             $harian = Kunjungan::query()
                 ->whereDate('MASUK', Carbon::today())
                 ->where('RUANGAN', request()->ruangan)
+                ->whereBetween('MASUK', [$from, $to])
                 ->get();
             $mingguan = Kunjungan::query()
                 ->whereBetween('MASUK', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
@@ -109,6 +152,7 @@ class RawatJalanController extends Controller
                 )
                 ->orderBy('pendaftaran.kunjungan.MASUK', 'desc')
                 ->groupBy(DB::raw("DATE_FORMAT(pendaftaran.kunjungan.MASUK, '%m-%Y')"))
+                ->whereBetween('pendaftaran.kunjungan.MASUK', [$from, $to])
                 ->limit(10)
                 ->get();
             $umur = Kunjungan::query()
@@ -125,6 +169,7 @@ class RawatJalanController extends Controller
                 )
                 ->orderBy('pendaftaran.kunjungan.MASUK', 'desc')
                 ->groupBy(DB::raw("DATE_FORMAT(pendaftaran.kunjungan.MASUK, '%m-%Y')"))
+                ->whereBetween('pendaftaran.kunjungan.MASUK', [$from, $to])
                 ->limit(10)
                 ->get();
             $new_weekly = Kunjungan::query()
@@ -147,8 +192,44 @@ class RawatJalanController extends Controller
                 ->where('pendaftaran.kunjungan.RUANGAN', request()->ruangan)
                 ->where('pendaftaran.kunjungan.BARU', 0)
                 ->get();
+            $rujukanData = Kunjungan::query()
+                ->leftJoin('pendaftaran.pendaftaran', 'pendaftaran.pendaftaran.NOMOR', '=', 'pendaftaran.kunjungan.NOPEN')
+                ->leftJoin('master.ppk', 'pendaftaran.pendaftaran.RUJUKAN', '=', 'master.ppk.ID')
+                ->leftJoin('master.referensi', function ($query) {
+                    $query->on('master.ppk.JENIS', '=', 'master.referensi.ID')->where('master.referensi.JENIS', 11);
+                })
+                ->where('RUANGAN', request()->ruangan)
+                ->whereBetween('pendaftaran.kunjungan.MASUK', [$from, $to])
+                ->select(
+                    'pendaftaran.kunjungan.MASUK as tanggal',
+                    DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 156  THEN 1 ELSE NULL END) as rumah_sakit"),
+                    DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 157  THEN 1 ELSE NULL END) as puskesmas"),
+                    DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 158  THEN 1 ELSE NULL END) as klinik"),
+                    DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 159  THEN 1 ELSE NULL END) as dokter"),
+                    DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 160  THEN 1 ELSE NULL END) as apoteker"),
+                    DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 161  THEN 1 ELSE NULL END) as instansi"),
+                    DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 162  THEN 1 ELSE NULL END) as perusahaan"),
+                )
+                ->groupBy(DB::raw("DATE_FORMAT(pendaftaran.kunjungan.MASUK, '%d-%m-%Y')"))
+                ->orderBy('pendaftaran.kunjungan.MASUK', 'desc')
+                ->limit(30)
+                ->get();
+            $diagnosa =  Kunjungan::query()
+                ->leftJoin('medicalrecord.diagnosa', 'pendaftaran.kunjungan.NOPEN', '=', 'medicalrecord.diagnosa.NOPEN')
+                ->select(
+                    DB::raw("COUNT(*) as total"),
+                    'medicalrecord.diagnosa.KODE as kode_diagnosa',
+                    'medicalrecord.diagnosa.DIAGNOSA as nama_diagnosa'
+                )
+                ->limit(10)
+                ->orderBy('total', 'desc')
+                ->whereBetween('pendaftaran.kunjungan.MASUK', [$from, $to])
+                ->where('RUANGAN', request()->ruangan)
+                ->groupBy('medicalrecord.diagnosa.KODE')
+                ->get();
         }
 
+        // dd($diagnosa);
 
         return inertia('Dashboard/RawatJalan/Index', [
             'page_settings' => [
@@ -194,6 +275,41 @@ class RawatJalanController extends Controller
                 ]
             ],
             'ageChartData' => $umur,
+            'rujukanChartConfig' => [
+                'views' => [
+                    'label' => 'Pages Views'
+                ],
+                'rumah_sakit' => [
+                    'label' => 'Rumah Sakit',
+                    'color' => 'hsl(var(--chart-1))'
+                ],
+                'puskesmas' => [
+                    'label' => 'Puskesmas',
+                    'color' => 'hsl(var(--chart-2))'
+                ],
+                'klinik' => [
+                    'label' => 'Klinik',
+                    'color' => 'hsl(var(--chart-3))'
+                ],
+                'dokter' => [
+                    'label' => 'Dokter',
+                    'color' => 'hsl(var(--chart-4))'
+                ],
+                'apoteker' => [
+                    'label' => 'Apoteker',
+                    'color' => 'hsl(var(--chart-5))'
+                ],
+                'instansi' => [
+                    'label' => 'Instansi',
+                    'color' => 'hsl(var(--chart-6))'
+                ],
+                'perusahaan' => [
+                    'label' => 'Perusahaan',
+                    'color' => 'hsl(var(--chart-7))'
+                ],
+            ],
+            'rujukanChartData' => $rujukanData,
+            'dataDiagnosa' => $diagnosa
         ]);
     }
 }
