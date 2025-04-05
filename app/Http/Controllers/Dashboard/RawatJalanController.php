@@ -91,7 +91,7 @@ class RawatJalanController extends Controller
                 ->leftJoin('pendaftaran.pendaftaran', 'pendaftaran.pendaftaran.NOMOR', '=', 'pendaftaran.kunjungan.NOPEN')
                 ->leftJoin('master.ppk', 'pendaftaran.pendaftaran.RUJUKAN', '=', 'master.ppk.ID')
                 ->leftJoin('master.referensi', function ($query) {
-                    $query->on('master.ppk.JENIS', '=', 'master.referensi.ID')->where('master.referensi.JENIS', 11);
+                    $query->on('master.ppk.JENIS', '=', 'master.referensi.ID')->where('master.referensi.JENIS', 11)->where('master.referensi.STATUS', '=', 1);
                 })
                 ->whereIn('RUANGAN', ['111010401', '111010501', '111010601', '111010701', '113010101'])
                 ->select(
@@ -100,9 +100,8 @@ class RawatJalanController extends Controller
                     DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 157  THEN 1 ELSE NULL END) as puskesmas"),
                     DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 158  THEN 1 ELSE NULL END) as klinik"),
                     DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 159  THEN 1 ELSE NULL END) as dokter"),
-                    DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 160  THEN 1 ELSE NULL END) as apoteker"),
-                    DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 161  THEN 1 ELSE NULL END) as instansi"),
-                    DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 162  THEN 1 ELSE NULL END) as perusahaan"),
+                    DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 4121  THEN 1 ELSE NULL END) as perawat"),
+                    DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 4122  THEN 1 ELSE NULL END) as bidan"),
                 )
                 ->groupBy(DB::raw("DATE_FORMAT(pendaftaran.kunjungan.MASUK, '%d-%m-%Y')"))
                 ->whereBetween('pendaftaran.kunjungan.MASUK', [$from, $to])
@@ -196,7 +195,7 @@ class RawatJalanController extends Controller
                 ->leftJoin('pendaftaran.pendaftaran', 'pendaftaran.pendaftaran.NOMOR', '=', 'pendaftaran.kunjungan.NOPEN')
                 ->leftJoin('master.ppk', 'pendaftaran.pendaftaran.RUJUKAN', '=', 'master.ppk.ID')
                 ->leftJoin('master.referensi', function ($query) {
-                    $query->on('master.ppk.JENIS', '=', 'master.referensi.ID')->where('master.referensi.JENIS', 11);
+                    $query->on('master.ppk.JENIS', '=', 'master.referensi.ID')->where('master.referensi.JENIS', 11)->where('master.referensi.STATUS', '=', 1);
                 })
                 ->where('RUANGAN', request()->ruangan)
                 ->whereBetween('pendaftaran.kunjungan.MASUK', [$from, $to])
@@ -206,9 +205,8 @@ class RawatJalanController extends Controller
                     DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 157  THEN 1 ELSE NULL END) as puskesmas"),
                     DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 158  THEN 1 ELSE NULL END) as klinik"),
                     DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 159  THEN 1 ELSE NULL END) as dokter"),
-                    DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 160  THEN 1 ELSE NULL END) as apoteker"),
-                    DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 161  THEN 1 ELSE NULL END) as instansi"),
-                    DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 162  THEN 1 ELSE NULL END) as perusahaan"),
+                    DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 4121  THEN 1 ELSE NULL END) as perawat"),
+                    DB::raw("COUNT(CASE WHEN master.referensi.TABEL_ID = 4122  THEN 1 ELSE NULL END) as bidan"),
                 )
                 ->groupBy(DB::raw("DATE_FORMAT(pendaftaran.kunjungan.MASUK, '%d-%m-%Y')"))
                 ->orderBy('pendaftaran.kunjungan.MASUK', 'desc')
@@ -229,7 +227,7 @@ class RawatJalanController extends Controller
                 ->get();
         }
 
-        // dd($diagnosa);
+        // dd($rujukanData);
 
         return inertia('Dashboard/RawatJalan/Index', [
             'page_settings' => [
@@ -295,17 +293,13 @@ class RawatJalanController extends Controller
                     'label' => 'Dokter',
                     'color' => 'hsl(var(--chart-4))'
                 ],
-                'apoteker' => [
-                    'label' => 'Apoteker',
+                'perawat' => [
+                    'label' => 'Perawat',
                     'color' => 'hsl(var(--chart-5))'
                 ],
-                'instansi' => [
-                    'label' => 'Instansi',
+                'bidan' => [
+                    'label' => 'Bidan',
                     'color' => 'hsl(var(--chart-6))'
-                ],
-                'perusahaan' => [
-                    'label' => 'Perusahaan',
-                    'color' => 'hsl(var(--chart-7))'
                 ],
             ],
             'rujukanChartData' => $rujukanData,

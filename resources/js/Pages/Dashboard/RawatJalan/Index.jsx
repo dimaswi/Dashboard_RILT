@@ -28,9 +28,8 @@ export default function Index(props) {
             puskesmas: props.rujukanChartData.reduce((acc, curr) => acc + curr.puskesmas, 0),
             klinik: props.rujukanChartData.reduce((acc, curr) => acc + curr.klinik, 0),
             dokter: props.rujukanChartData.reduce((acc, curr) => acc + curr.dokter, 0),
-            apoteker: props.rujukanChartData.reduce((acc, curr) => acc + curr.apoteker, 0),
-            instansi: props.rujukanChartData.reduce((acc, curr) => acc + curr.instansi, 0),
-            perusahaan: props.rujukanChartData.reduce((acc, curr) => acc + curr.perusahaan, 0),
+            perawat: props.rujukanChartData.reduce((acc, curr) => acc + curr.perawat, 0),
+            bidan: props.rujukanChartData.reduce((acc, curr) => acc + curr.bidan, 0),
         }),
         [
             {
@@ -38,9 +37,8 @@ export default function Index(props) {
                 puskesmas: props.rujukanChartData.reduce((acc, curr) => acc + curr.puskesmas, 0),
                 klinik: props.rujukanChartData.reduce((acc, curr) => acc + curr.klinik, 0),
                 dokter: props.rujukanChartData.reduce((acc, curr) => acc + curr.dokter, 0),
-                apoteker: props.rujukanChartData.reduce((acc, curr) => acc + curr.apoteker, 0),
-                instansi: props.rujukanChartData.reduce((acc, curr) => acc + curr.instansi, 0),
-                perusahaan: props.rujukanChartData.reduce((acc, curr) => acc + curr.perusahaan, 0),
+                perawat: props.rujukanChartData.reduce((acc, curr) => acc + curr.perawat, 0),
+                bidan: props.rujukanChartData.reduce((acc, curr) => acc + curr.bidan, 0),
             }
         ]
     )
@@ -200,7 +198,7 @@ export default function Index(props) {
                             </CardDescription>
                         </div>
                         <div className="lg:flex">
-                            {["rumah_sakit", "puskesmas", "klinik", "dokter", "apoteker", "instansi", "perusahaan"].map((key) => {
+                            {["rumah_sakit", "puskesmas", "klinik", "dokter", "perawat", "bidan"].map((key) => {
                                 const chart = props.rujukanChartConfig
                                 return (
                                     <button
