@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Simgos\Kunjungan;
+use App\Models\Simgos\Pendaftaran;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -64,6 +65,27 @@ class RawatJalanController extends Controller
                 ->orderBy('pendaftaran.kunjungan.MASUK', 'desc')
                 ->groupBy(DB::raw("DATE_FORMAT(pendaftaran.kunjungan.MASUK, '%m-%Y')"))
                 ->whereBetween('pendaftaran.kunjungan.MASUK', [$from, $to])
+                ->orderBy('tanggal', 'desc')
+                ->limit(10)
+                ->get();
+            $penjamin = Pendaftaran::query()
+                ->leftJoin('pendaftaran.penjamin', 'pendaftaran.penjamin.NOPEN', '=', 'pendaftaran.pendaftaran.NOMOR')
+                ->leftJoin('pendaftaran.tujuan_pasien', 'pendaftaran.tujuan_pasien.NOPEN', '=', 'pendaftaran.pendaftaran.NOMOR')
+                ->leftJoin('master.referensi', function ($query) {
+                    $query->on('master.referensi.ID', '=', 'pendaftaran.penjamin.JENIS')->where('master.referensi.JENIS', 10);
+                })
+                ->whereIn('pendaftaran.tujuan_pasien.RUANGAN', ['111010401', '111010501', '111010601', '111010701', '113010101'])
+                ->select(
+                    DB::raw("MONTHNAME(pendaftaran.pendaftaran.TANGGAL) as bulan"),
+                    DB::raw("pendaftaran.pendaftaran.TANGGAL as tanggal"),
+                    DB::raw("COUNT(IF(pendaftaran.penjamin.JENIS = 1, 1, NULL)) as umum"),
+                    DB::raw("COUNT(IF(pendaftaran.penjamin.JENIS = 2, 1, NULL)) as bpjs"),
+                    DB::raw("COUNT(IF(pendaftaran.penjamin.JENIS = 7, 1, NULL)) as karyawan"),
+                    DB::raw("COUNT(IF(pendaftaran.penjamin.JENIS = 8, 1, NULL)) as jasa_raharja"),
+                )
+                ->orderBy('pendaftaran.pendaftaran.TANGGAL', 'desc')
+                ->groupBy(DB::raw("DATE_FORMAT(pendaftaran.pendaftaran.TANGGAL, '%m-%Y')"))
+                ->whereBetween('pendaftaran.pendaftaran.TANGGAL', [$from, $to])
                 ->orderBy('tanggal', 'desc')
                 ->limit(10)
                 ->get();
@@ -171,6 +193,27 @@ class RawatJalanController extends Controller
                 ->whereBetween('pendaftaran.kunjungan.MASUK', [$from, $to])
                 ->limit(10)
                 ->get();
+            $penjamin = Pendaftaran::query()
+                ->leftJoin('pendaftaran.penjamin', 'pendaftaran.penjamin.NOPEN', '=', 'pendaftaran.pendaftaran.NOMOR')
+                ->leftJoin('pendaftaran.tujuan_pasien', 'pendaftaran.tujuan_pasien.NOPEN', '=', 'pendaftaran.pendaftaran.NOMOR')
+                ->leftJoin('master.referensi', function ($query) {
+                    $query->on('master.referensi.ID', '=', 'pendaftaran.penjamin.JENIS')->where('master.referensi.JENIS', 10);
+                })
+                ->where('pendaftaran.tujuan_pasien.RUANGAN', request()->ruangan)
+                ->select(
+                    DB::raw("MONTHNAME(pendaftaran.pendaftaran.TANGGAL) as bulan"),
+                    DB::raw("pendaftaran.pendaftaran.TANGGAL as tanggal"),
+                    DB::raw("COUNT(IF(pendaftaran.penjamin.JENIS = 1, 1, NULL)) as umum"),
+                    DB::raw("COUNT(IF(pendaftaran.penjamin.JENIS = 2, 1, NULL)) as bpjs"),
+                    DB::raw("COUNT(IF(pendaftaran.penjamin.JENIS = 7, 1, NULL)) as karyawan"),
+                    DB::raw("COUNT(IF(pendaftaran.penjamin.JENIS = 8, 1, NULL)) as jasa_raharja"),
+                )
+                ->orderBy('pendaftaran.pendaftaran.TANGGAL', 'desc')
+                ->groupBy(DB::raw("DATE_FORMAT(pendaftaran.pendaftaran.TANGGAL, '%m-%Y')"))
+                ->whereBetween('pendaftaran.pendaftaran.TANGGAL', [$from, $to])
+                ->orderBy('tanggal', 'desc')
+                ->limit(10)
+                ->get();
             $new_weekly = Kunjungan::query()
                 ->whereBetween('MASUK', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
                 ->where('pendaftaran.kunjungan.RUANGAN', request()->ruangan)
@@ -273,6 +316,25 @@ class RawatJalanController extends Controller
                 ]
             ],
             'ageChartData' => $umur,
+            'penjaminChartConfig' => [
+                'umum' => [
+                    'label' => 'Umum',
+                    'color' => 'hsl(var(--chart-1))'
+                ],
+                'bpjs' => [
+                    'label' => 'BPJS',
+                    'color' => 'hsl(var(--chart-2))'
+                ],
+                'karyawan' => [
+                    'label' => 'Asuransi Karyawan',
+                    'color' => 'hsl(var(--chart-3))'
+                ],
+                'jasa_raharja' => [
+                    'label' => 'Jasa Raharja',
+                    'color' => 'hsl(var(--chart-4))'
+                ]
+            ],
+            'penjaminChartData' => $penjamin,
             'rujukanChartConfig' => [
                 'views' => [
                     'label' => 'Pages Views'

@@ -405,6 +405,65 @@ export default function Index(props) {
                         </Table>
                     </CardContent>
                 </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Jenis Penjamin Pasien</CardTitle>
+                        <CardDescription>Data Kunjungan Kunjungan Pasien Berdasarkan Jenis Penjamin </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <ChartContainer config={props.penjaminChartConfig}>
+                            <BarChart accessibilityLayer data={props.penjaminChartData}>
+                                <XAxis
+                                    dataKey="tanggal"
+                                    tickLine={false}
+                                    tickMargin={10}
+                                    axisLine={false}
+                                    tickFormatter={(value) => {
+                                        return new Date(value).toLocaleDateString("id-ID", {
+                                            month: "long",
+                                        })
+                                    }}
+                                />
+                                <Bar
+                                    dataKey="umum"
+                                    stackId="a"
+                                    fill="var(--color-umum)"
+                                />
+                                <Bar
+                                    dataKey="bpjs"
+                                    stackId="b"
+                                    fill="var(--color-bpjs)"
+                                />
+                                <Bar
+                                    dataKey="karyawan"
+                                    stackId="c"
+                                    fill="var(--color-karyawan)"
+                                />
+                                <Bar
+                                    dataKey="jasa_raharja"
+                                    stackId="d"
+                                    fill="var(--color-jasa_raharja)"
+                                />
+                                <ChartTooltip
+                                    content={
+                                        <ChartTooltipContent
+                                            labelFormatter={(value) => {
+                                                return new Date(value).toLocaleDateString("en-US", {
+                                                    day: "numeric",
+                                                    month: "long",
+                                                    year: "numeric",
+                                                })
+                                            }}
+                                        />
+                                    }
+                                    cursor={false}
+                                    defaultIndex={1}
+                                />
+                            </BarChart>
+                        </ChartContainer>
+                    </CardContent>
+                </Card>
             </div>
 
         </div>
